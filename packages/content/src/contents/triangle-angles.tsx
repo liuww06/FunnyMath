@@ -23,27 +23,15 @@ export const TriangleAngles: React.FC<TriangleAnglesProps> = ({ onComplete }) =>
       ];
     }
 
-    const rad1 = (angle1 * Math.PI) / 180;
-    const rad2 = (angle2 * Math.PI) / 180;
-    const rad3 = (angle3 * Math.PI) / 180;
-
-    const side = 2;
-    const x1 = 0;
-    const y1 = 1;
-
-    const x2 = -Math.sin(rad1) * side;
-    const y2 = y1 - Math.cos(rad1) * side;
-
-    const angleAtVertex2 = rad2;
-    const x3 = x2 + Math.cos(angleAtVertex2) * side * Math.sin(rad3);
-    const y3 = y2 - Math.sin(angleAtVertex2) * side * Math.cos(rad3);
+    const a = (angle1 * Math.PI) / 180;
+    const b = (angle2 * Math.PI) / 180;
 
     return [
-      [x1, y1, 0],
-      [x2, y2, 0],
-      [x3, y3, 0],
+      [0, 1, 0],
+      [-Math.sin(a), -Math.cos(a), 0],
+      [Math.sin(b), -Math.cos(b), 0]
     ];
-  }, [angle1, angle2, angle3, isValid]);
+  }, [angle1, angle2, isValid]);
 
   return (
     <div className="triangle-content">
@@ -73,7 +61,10 @@ export const TriangleAngles: React.FC<TriangleAnglesProps> = ({ onComplete }) =>
             min="20"
             max="140"
             value={angle1}
-            onChange={(e) => setAngle1(Number(e.target.value))}
+            onChange={(e) => {
+              const val = parseFloat(e.target.value);
+              if (!isNaN(val)) setAngle1(val);
+            }}
           />
         </div>
         <div className="angle-control">
@@ -83,7 +74,10 @@ export const TriangleAngles: React.FC<TriangleAnglesProps> = ({ onComplete }) =>
             min="20"
             max="140"
             value={angle2}
-            onChange={(e) => setAngle2(Number(e.target.value))}
+            onChange={(e) => {
+              const val = parseFloat(e.target.value);
+              if (!isNaN(val)) setAngle2(val);
+            }}
           />
         </div>
         <div className="angle-display">
