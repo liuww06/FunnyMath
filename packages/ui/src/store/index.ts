@@ -18,11 +18,16 @@ export const useAppStore = create<AppState>((set) => ({
     totalPoints: 0,
   },
   updateProgress: (contentId, points) =>
-    set((state) => ({
-      userProgress: {
-        completedContent: [...state.userProgress.completedContent, contentId],
-        currentLevel: Math.floor(state.userProgress.totalPoints / 100) + 1,
-        totalPoints: state.userProgress.totalPoints + points,
-      },
-    })),
+    set((state) => {
+      const alreadyCompleted = state.userProgress.completedContent.includes(contentId);
+      return {
+        userProgress: {
+          completedContent: alreadyCompleted
+            ? state.userProgress.completedContent
+            : [...state.userProgress.completedContent, contentId],
+          currentLevel: Math.floor((state.userProgress.totalPoints + points) / 100) + 1,
+          totalPoints: alreadyCompleted ? state.userProgress.totalPoints : state.userProgress.totalPoints + points,
+        },
+      };
+    }),
 }));
