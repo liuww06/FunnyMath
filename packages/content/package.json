@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "src/index.ts",
   "dependencies": {
-    "@funnymath/ui": "*",
+    "@funnymath/ui": "workspace:^",
     "@react-three/fiber": "^8.15.0",
     "@react-three/drei": "^9.95.0",
     "three": "^0.160.0",

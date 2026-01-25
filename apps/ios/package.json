@@ -7,8 +7,8 @@
     "android": "expo run:android"
   },
   "dependencies": {
-    "@funnymath/ui": "*",
-    "@funnymath/content": "*",
+    "@funnymath/ui": "workspace:^",
+    "@funnymath/content": "workspace:^",
     "expo": "~50.0.0",
     "expo-status-bar": "~1.11.0",
     "react": "18.2.0",

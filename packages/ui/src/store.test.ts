@@ -1,15 +1,14 @@
 import { useAppStore } from './store';
 
 describe('App Store', () => {
+  // Reset state before each test
   beforeEach(() => {
-    const { setState } = useAppStore;
-    setState({
+    useAppStore.setState({
       userProgress: {
         completedContent: [],
         currentLevel: 1,
         totalPoints: 0,
       },
-      updateProgress: expect.any(Function),
     });
   });
 

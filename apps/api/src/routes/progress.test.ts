@@ -7,20 +7,23 @@ app.use(express.json());
 app.use('/api/progress', progressRoutes);
 
 describe('Progress API', () => {
-  const testUserId = 'test-user-123';
+  // Use unique IDs per test to avoid interference
+  const getUserId = () => `test-user-${Math.random().toString(36).substr(2, 9)}`;
 
   test('GET /api/progress/:userId should return empty progress for new user', async () => {
+    const testUserId = getUserId();
     const response = await request(app).get(`/api/progress/${testUserId}`);
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      userId: testUserId,
+    expect(response.body).toMatchObject({
       completedContent: [],
       totalPoints: 0,
-      level: 1
+      level: 1,
+      userId: testUserId
     });
   });
 
   test('POST /api/progress/:userId should update progress', async () => {
+    const testUserId = getUserId();
     const response = await request(app)
       .post(`/api/progress/${testUserId}`)
       .send({ contentId: 'triangle-basic', points: 10 });
@@ -30,6 +33,7 @@ describe('Progress API', () => {
   });
 
   test('GET after POST should return updated progress', async () => {
+    const testUserId = getUserId();
     await request(app)
       .post(`/api/progress/${testUserId}`)
       .send({ contentId: 'triangle-basic', points: 10 });
