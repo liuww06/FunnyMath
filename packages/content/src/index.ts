@@ -2,6 +2,7 @@ export { TriangleBasic } from './contents/triangle-basic';
 export { TriangleAngles } from './contents/triangle-angles';
 export { AreaVisualization } from './contents/area-visualization';
 export { SolidUnfolding } from './contents/solid-unfolding';
+export { AngleMeasurement } from './contents/angle-measurement';
 export type { InteractiveContent, GeometryContent } from './types';
 
 export const CONTENT_REGISTRY = [
@@ -55,6 +56,19 @@ export const CONTENT_REGISTRY = [
       '认识常见的立体图形',
       '理解立体图形与平面展开图的关系',
       '培养空间想象能力'
+    ]
+  },
+  {
+    id: 'angle-measurement',
+    title: '角度测量',
+    grade: '4-5',
+    difficulty: 2,
+    component: AngleMeasurement,
+    category: 'plane',
+    learningObjectives: [
+      '学会使用量角器',
+      '认识不同大小的角度',
+      '提高目测角度的能力'
     ]
   }
 ] as const;
