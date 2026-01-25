@@ -3,7 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-export const TriangleBasic: React.FC = () => {
+interface TriangleBasicProps {
+  onComplete?: () => void;
+}
+
+export const TriangleBasic: React.FC<TriangleBasicProps> = ({ onComplete }) => {
   const [vertices, setVertices] = useState([
     [0, 1, 0],
     [-1, -1, 0],
@@ -58,6 +62,11 @@ export const TriangleBasic: React.FC = () => {
             />
           </div>
         ))}
+        {onComplete && (
+          <button className="complete-button" onClick={onComplete}>
+            完成
+          </button>
+        )}
       </div>
     </div>
   );
