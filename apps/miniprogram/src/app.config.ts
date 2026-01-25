@@ -1,6 +1,7 @@
 export default {
   pages: [
     'pages/index/index',
+    'pages/parent/index',
     'pages/content/index'
   ],
   window: {
