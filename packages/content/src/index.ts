@@ -1,5 +1,6 @@
 export { TriangleBasic } from './contents/triangle-basic';
 export { TriangleAngles } from './contents/triangle-angles';
+export { AreaVisualization } from './contents/area-visualization';
 export type { InteractiveContent, GeometryContent } from './types';
 
 export const CONTENT_REGISTRY = [
@@ -27,6 +28,19 @@ export const CONTENT_REGISTRY = [
       '验证三角形内角和等于180°',
       '通过调整角度观察变化',
       '理解角度与形状的关系'
+    ]
+  },
+  {
+    id: 'area-visualization',
+    title: '面积可视化',
+    grade: '4-5',
+    difficulty: 2,
+    component: AreaVisualization,
+    category: 'plane',
+    learningObjectives: [
+      '理解面积的含义',
+      '通过数格子验证面积公式',
+      '观察底和高变化对面积的影响'
     ]
   }
 ] as const;
