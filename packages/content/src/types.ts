@@ -3,7 +3,7 @@ export interface InteractiveContent {
   title: string;
   grade: string; // "3-4" for 3rd-4th grade
   difficulty: 1 | 2 | 3;
-  component: React.ComponentType<any>;
+  component: React.ComponentType;
   learningObjectives: string[];
 }
 
