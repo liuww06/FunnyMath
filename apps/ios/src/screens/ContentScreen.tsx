@@ -5,19 +5,24 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  useWindowDimensions,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { WebView } from 'react-native-webview';
+import { useAppStore } from '@funnymath/ui';
 import { CONTENT_REGISTRY } from '@funnymath/content';
 import type { RootStackParamList } from '../../App';
 
 type ContentScreenProps = NativeStackScreenProps<RootStackParamList, keyof RootStackParamList>;
 
-const ContentScreen: React.FC<ContentScreenProps> = ({ route }) => {
+export function ContentScreen({ route }: ContentScreenProps) {
   const { contentId } = route.params;
+  const { userProgress, updateProgress } = useAppStore();
   const content = CONTENT_REGISTRY.find((c) => c.id === contentId);
-  const dimensions = useWindowDimensions();
+
+  const handleComplete = () => {
+    if (!userProgress.completedContent.includes(contentId)) {
+      updateProgress(contentId, 10);
+    }
+  };
 
   if (!content) {
     return (
@@ -29,56 +34,7 @@ const ContentScreen: React.FC<ContentScreenProps> = ({ route }) => {
     );
   }
 
-  // Since we're using React Three Fiber content that's web-based,
-  // we'll render it in a WebView for the iOS app
-  const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <style>
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-          }
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #F9FAFB;
-            overflow: hidden;
-          }
-          #root {
-            width: 100vw;
-            height: 100vh;
-          }
-        </style>
-      </head>
-      <body>
-        <div id="root"></div>
-        <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-        <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-        <script>
-          // This is a placeholder for the actual content component
-          // In production, this would load the bundled content component
-          const root = document.getElementById('root');
-          root.innerHTML = \`
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px;">
-              <h2 style="color: #111827; margin-bottom: 20px;">\${encodeURIComponent(content.title)}</h2>
-              <div style="background: white; border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <p style="color: #6B7280; text-align: center;">3D 互动内容区域</p>
-                <div style="background: #EEF2FF; height: 200px; border-radius: 12px; margin: 20px 0; display: flex; align-items: center; justify-content: center;">
-                  <span style="color: #6366F1;">Canvas 3D View</span>
-                </div>
-                <p style="color: #9CA3AF; font-size: 12px; text-align: center;">完整版本将集成 Three.js 交互组件</p>
-              </div>
-            </div>
-          \`;
-        </script>
-      </body>
-    </html>
-  `;
+  const ContentComponent = content.component;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -94,19 +50,9 @@ const ContentScreen: React.FC<ContentScreenProps> = ({ route }) => {
           ))}
         </View>
 
-        {/* Content Area - Using WebView for web-based 3D content */}
+        {/* Content Component */}
         <View style={styles.contentContainer}>
-          <View style={[styles.webviewContainer, { height: dimensions.width * 0.8 }]}>
-            <WebView
-              source={{ html: htmlContent }}
-              style={styles.webview}
-              scrollEnabled={false}
-              javaScriptEnabled={true}
-              domStorageEnabled={true}
-              startInLoadingState={true}
-              scalesPageToFit={true}
-            />
-          </View>
+          <ContentComponent onComplete={handleComplete} />
         </View>
 
         {/* Grade Info */}
@@ -154,7 +100,7 @@ const ContentScreen: React.FC<ContentScreenProps> = ({ route }) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -214,19 +160,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 8,
   },
-  webviewContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  webview: {
-    flex: 1,
-  },
   infoCard: {
     backgroundColor: '#FFFFFF',
     margin: 16,
@@ -275,5 +208,3 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
-
-export default ContentScreen;

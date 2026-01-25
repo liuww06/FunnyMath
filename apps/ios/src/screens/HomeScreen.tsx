@@ -9,19 +9,15 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CONTENT_REGISTRY } from '@funnymath/content';
+import { useAppStore } from '@funnymath/ui';
 import type { RootStackParamList } from '../../App';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  // User progress data (mock data for MVP)
-  const userProgress = {
-    points: 350,
-    level: '小学三年级',
-    completedLessons: 5,
-  };
+export function HomeScreen({ navigation }: HomeScreenProps) {
+  const { userProgress } = useAppStore();
 
   const getDifficultyColor = (difficulty: number) => {
     switch (difficulty) {
@@ -67,33 +63,39 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     );
   };
 
-  const renderContentCard = (content: typeof CONTENT_REGISTRY[0]) => (
-    <TouchableOpacity
-      key={content.id}
-      style={styles.contentCard}
-      onPress={() => navigation.navigate(content.id as keyof RootStackParamList)}
-    >
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{content.title}</Text>
-        {renderDifficultyDots(content.difficulty)}
-      </View>
-      <View style={styles.cardMeta}>
-        <View style={styles.gradeBadge}>
-          <Text style={styles.gradeText}>{content.grade}</Text>
+  const renderContentCard = (content: typeof CONTENT_REGISTRY[0]) => {
+    const isCompleted = userProgress.completedContent.includes(content.id);
+
+    return (
+      <TouchableOpacity
+        key={content.id}
+        style={styles.contentCard}
+        onPress={() => navigation.navigate(content.id as keyof RootStackParamList)}
+      >
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>{content.title}</Text>
+          {renderDifficultyDots(content.difficulty)}
         </View>
-        <Text style={styles.difficultyText}>{getDifficultyLabel(content.difficulty)}</Text>
-      </View>
-      <View style={styles.objectivesContainer}>
-        <Text style={styles.objectivesLabel}>学习目标:</Text>
-        {content.learningObjectives.map((objective, index) => (
-          <View key={index} style={styles.objectiveItem}>
-            <View style={styles.bulletPoint} />
-            <Text style={styles.objectiveText}>{objective}</Text>
+        <View style={styles.cardMeta}>
+          <View style={[styles.gradeBadge, isCompleted && styles.completedBadge]}>
+            <Text style={[styles.gradeText, isCompleted && styles.completedText]}>
+              {isCompleted ? '已完成' : content.grade}
+            </Text>
           </View>
-        ))}
-      </View>
-    </TouchableOpacity>
-  );
+          <Text style={styles.difficultyText}>{getDifficultyLabel(content.difficulty)}</Text>
+        </View>
+        <View style={styles.objectivesContainer}>
+          <Text style={styles.objectivesLabel}>学习目标:</Text>
+          {content.learningObjectives.map((objective, index) => (
+            <View key={index} style={styles.objectiveItem}>
+              <View style={styles.bulletPoint} />
+              <Text style={styles.objectiveText}>{objective}</Text>
+            </View>
+          ))}
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -114,12 +116,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Text style={styles.progressTitle}>学习进度</Text>
           <View style={styles.progressStats}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{userProgress.points}</Text>
+              <Text style={styles.statValue}>{userProgress.totalPoints}</Text>
               <Text style={styles.statLabel}>积分</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{userProgress.completedLessons}</Text>
+              <Text style={styles.statValue}>{userProgress.completedContent.length}</Text>
               <Text style={styles.statLabel}>已完成</Text>
             </View>
             <View style={styles.statDivider} />
@@ -129,7 +131,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </View>
           </View>
           <View style={styles.levelBadge}>
-            <Text style={styles.levelText}>{userProgress.level}</Text>
+            <Text style={styles.levelText}>等级 {userProgress.currentLevel}</Text>
           </View>
         </View>
 
@@ -141,7 +143,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -291,10 +293,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginRight: 12,
   },
+  completedBadge: {
+    backgroundColor: '#D1FAE5',
+  },
   gradeText: {
     color: '#6366F1',
     fontSize: 12,
     fontWeight: '600',
+  },
+  completedText: {
+    color: '#059669',
   },
   difficultyText: {
     fontSize: 12,
@@ -308,7 +316,7 @@ const styles = StyleSheet.create({
   objectivesLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: #374151',
+    color: '#374151',
     marginBottom: 8,
   },
   objectiveItem: {
@@ -331,5 +339,3 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
-
-export default HomeScreen;
