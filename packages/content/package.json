@@ -1,0 +1,16 @@
+{
+  "name": "@funnymath/content",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@funnymath/ui": "*",
+    "@react-three/fiber": "^8.15.0",
+    "@react-three/drei": "^9.95.0",
+    "three": "^0.160.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.160.0",
+    "typescript": "^5.3.0"
+  }
+}
