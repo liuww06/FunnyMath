@@ -1,6 +1,7 @@
 export { TriangleBasic } from './contents/triangle-basic';
 export { TriangleAngles } from './contents/triangle-angles';
 export { AreaVisualization } from './contents/area-visualization';
+export { SolidUnfolding } from './contents/solid-unfolding';
 export type { InteractiveContent, GeometryContent } from './types';
 
 export const CONTENT_REGISTRY = [
@@ -41,6 +42,19 @@ export const CONTENT_REGISTRY = [
       '理解面积的含义',
       '通过数格子验证面积公式',
       '观察底和高变化对面积的影响'
+    ]
+  },
+  {
+    id: 'solid-unfolding',
+    title: '立体图形展开',
+    grade: '5-6',
+    difficulty: 3,
+    component: SolidUnfolding,
+    category: 'solid',
+    learningObjectives: [
+      '认识常见的立体图形',
+      '理解立体图形与平面展开图的关系',
+      '培养空间想象能力'
     ]
   }
 ] as const;
