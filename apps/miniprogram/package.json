@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@funnymath/content": "workspace:*",
+    "@funnymath/ui": "workspace:*",
     "@tarojs/components": "3.6.24",
     "@tarojs/helper": "3.6.24",
     "@tarojs/plugin-platform-weapp": "3.6.24",
