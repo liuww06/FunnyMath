@@ -1,0 +1,25 @@
+/* Custom styles for components that need them */
+.triangle-content,
+.area-visualization,
+.solid-unfolding,
+.angle-measurement {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-container {
+  flex: 1;
+  position: relative;
+}
+
+.controls {
+  padding: 16px;
+  background: white;
+  border-top: 1px solid #E5E7EB;
+}
+
+.calculator-panel {
+  padding: 16px;
+}

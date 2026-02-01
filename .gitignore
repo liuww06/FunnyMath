@@ -7,9 +7,10 @@ dist/
 .turbo/
 **/.turbo/
 **/dist/
+**/.swc/
 
 # Lock file (optional - uncomment to commit)
-# pnpm-lock.yaml
+pnpm-lock.yaml
 
 # Environment
 .env
