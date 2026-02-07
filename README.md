@@ -9,6 +9,7 @@ funnymath/
 ├── apps/
 │   ├── ios/           # iOS App (React Native)
 │   ├── miniprogram/   # 微信小程序 (Taro)
+│   ├── web-preview/   # Web 内容预览工具
 │   └── api/           # 后端 API (Express + PostgreSQL)
 ├── packages/
 │   ├── ui/            # 共享 UI 组件和状态管理
@@ -40,6 +41,9 @@ npm install
 ### 运行开发服务器
 
 ```bash
+# Web 内容预览（开发时推荐）
+npm run dev --workspace=apps/web-preview
+
 # iOS App
 npm run dev --workspace=apps/ios
 

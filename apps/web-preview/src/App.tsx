@@ -2,9 +2,18 @@ import React, { useState, useMemo } from 'react';
 import { CONTENT_REGISTRY } from './contentRegistry';
 import './App.css';
 
+/**
+ * 内容分类筛选类型
+ * - all: 显示所有内容
+ * - plane: 只显示平面图形内容
+ * - solid: 只显示立体图形内容
+ */
 type CategoryFilter = 'all' | 'plane' | 'solid';
 
-// 图标组件
+/**
+ * 图标组件集合
+ * 提供各种 SVG 图标用于 UI 展示
+ */
 const Icons = {
   triangle: () => (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
@@ -69,7 +78,12 @@ const Icons = {
   ),
 };
 
-// 根据内容ID获取图标
+/**
+ * 根据内容 ID 获取对应的图标组件
+ * 通过匹配内容 ID 中的关键词来决定显示哪个图标
+ * @param id - 内容的唯一标识符
+ * @returns 对应的图标组件函数
+ */
 const getContentIcon = (id: string) => {
   if (id.includes('triangle')) return Icons.triangle;
   if (id.includes('angle')) return Icons.angle;
@@ -80,23 +94,45 @@ const getContentIcon = (id: string) => {
   return Icons.triangle;
 };
 
-// 分类标签映射
+/**
+ * 分类筛选器的中文标签映射
+ */
 const categoryLabels: Record<string, string> = {
   all: '全部',
   plane: '平面图形',
   solid: '立体图形',
 };
 
+/**
+ * 主应用组件
+ * 
+ * 提供以下功能：
+ * 1. 内容浏览和选择
+ * 2. 搜索功能（按标题和学习目标）
+ * 3. 分类筛选（平面/立体图形）
+ * 4. 响应式侧边栏
+ * 5. 内容详情展示
+ */
 export default function App() {
+  // 当前选中的内容 ID
   const [selectedContentId, setSelectedContentId] = useState<string | null>(null);
+  // 侧边栏展开/折叠状态
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  // 当前选中的分类筛选器
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  // 搜索查询字符串
   const [searchQuery, setSearchQuery] = useState('');
 
-  // 过滤内容
+  /**
+   * 过滤内容列表
+   * 同时应用分类筛选和搜索过滤
+   * 搜索会匹配标题和学习目标
+   */
   const filteredContent = useMemo(() => {
     return CONTENT_REGISTRY.filter((content) => {
+      // 检查是否匹配分类筛选
       const matchesCategory = categoryFilter === 'all' || content.category === categoryFilter;
+      // 检查是否匹配搜索查询（不区分大小写）
       const matchesSearch = searchQuery === '' ||
         content.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         content.learningObjectives.some(obj =>
@@ -106,12 +142,14 @@ export default function App() {
     });
   }, [categoryFilter, searchQuery]);
 
+  // 获取当前选中的内容对象
   const selectedContent = CONTENT_REGISTRY.find(c => c.id === selectedContentId);
 
   return (
     <div className="app-container">
-      {/* Sidebar */}
+      {/* 侧边栏：包含搜索、筛选和内容列表 */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+        {/* 侧边栏头部：应用标题和关闭按钮 */}
         <div className="sidebar-header">
           <div>
             <h1 className="app-title">
@@ -131,7 +169,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* 搜索框 */}
+        {/* 搜索框：支持实时搜索内容标题和学习目标 */}
         <div className="sidebar-search">
           <div className="search-input-wrapper">
             <Icons.search />
@@ -155,7 +193,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* 分类筛选 */}
+        {/* 分类筛选：按平面/立体图形筛选内容 */}
         <div className="category-filter">
           <div className="filter-header">
             <Icons.filter />
@@ -179,7 +217,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* 内容列表 */}
+        {/* 内容列表：显示过滤后的内容卡片 */}
         <div className="content-list">
           <p className="list-header">
             {categoryLabels[categoryFilter]} ({filteredContent.length})
@@ -190,6 +228,7 @@ export default function App() {
             </div>
           ) : (
             filteredContent.map((content) => {
+              // 根据内容类型选择合适的图标
               const IconComponent = getContentIcon(content.id);
               return (
                 <button
@@ -219,13 +258,13 @@ export default function App() {
           )}
         </div>
 
-        {/* 底部信息 */}
+        {/* 底部版权信息 */}
         <div className="sidebar-footer">
           <p>© 2025 FunnyMath</p>
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* 主内容区域：显示头部、欢迎屏幕或内容详情 */}
       <main className="main-content">
         {/* Header */}
         <header className="header">
@@ -273,9 +312,10 @@ export default function App() {
           </div>
         </header>
 
-        {/* Content Area */}
+        {/* 内容展示区域：根据是否选中内容显示欢迎屏幕或内容详情 */}
         <div className="content-area">
           {!selectedContent ? (
+            // 欢迎屏幕：显示统计信息和快速访问卡片
             <div className="welcome-screen">
               <div className="welcome-icon">
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -337,6 +377,7 @@ export default function App() {
               </div>
             </div>
           ) : (
+            // 内容详情：显示学习目标和互动组件
             <div className="content-detail">
               {/* 学习目标 */}
               <div className="learning-objectives">

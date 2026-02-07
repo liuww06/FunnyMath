@@ -6,6 +6,21 @@ import { AngleMeasurement } from '@funnymath/content/src/contents/angle-measurem
 import { CircleBasic } from '@funnymath/content/src/contents/circle/circle-basic';
 import { CircleFormulas } from '@funnymath/content/src/contents/circle/circle-formulas';
 
+/**
+ * 内容注册表
+ * 
+ * 这个数组包含所有可用的互动内容的元数据和组件引用。
+ * 每个内容项包括：
+ * - id: 唯一标识符，用于路由和状态管理
+ * - title: 显示的标题
+ * - grade: 适合的年级范围
+ * - difficulty: 难度等级（1-3，1最简单）
+ * - component: React 组件引用
+ * - category: 分类（'plane' 平面图形 或 'solid' 立体图形）
+ * - learningObjectives: 学习目标列表
+ * 
+ * 添加新内容时，只需在此数组中添加新的配置对象即可。
+ */
 export const CONTENT_REGISTRY = [
   {
     id: 'triangle-basic',
